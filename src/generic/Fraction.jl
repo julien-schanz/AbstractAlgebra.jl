@@ -73,9 +73,9 @@ function //(x::T, y::T) where {T <: RingElem}
    return z
 end
 
-//(x::T, y::AbstractAlgebra.FracElem{T}) where {T <: RingElem} = parent(y)(x)//y
+//(x::T, y::AbstractAlgebra.FracElem{T}) where {T <: RingElement} = parent(y)(x)//y
 
-//(x::AbstractAlgebra.FracElem{T}, y::T) where {T <: RingElem} = x//parent(x)(y)
+//(x::AbstractAlgebra.FracElem{T}, y::T) where {T <: RingElement} = x//parent(x)(y)
 
 ###############################################################################
 #

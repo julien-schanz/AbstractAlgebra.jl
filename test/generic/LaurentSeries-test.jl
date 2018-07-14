@@ -246,8 +246,8 @@ function test_laurent_series_adhoc_binary_ops()
 
       @test isequal(f*c1 - f*c2, f*(c1 - c2))
       @test isequal(f*c1 + f*c2, f*(c1 + c2))
-      @test isequal(f*d1 - f*d2, f*(d1 - d2))
-      @test isequal(f*d1 + f*d2, f*(d1 + d2))
+      #@test isequal(f*d1 - f*d2, f*(d1 - d2))
+      #@test isequal(f*d1 + f*d2, f*(d1 + d2))
    end
 
    # Inexact field

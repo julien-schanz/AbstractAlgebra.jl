@@ -688,7 +688,7 @@ doc"""
     *{T <: RingElem}(a::T, b::LaurentSeriesElem{T})
 > Return $a\times b$.
 """
-function *(a::T, b::LaurentSeriesElem{T}) where {T <: RingElem}
+function *(a::T, b::LaurentSeriesRingElem{T}) where {T <: RingElem}
    len = pol_length(b)
    z = parent(b)()
    fit!(z, len)
@@ -704,11 +704,111 @@ function *(a::T, b::LaurentSeriesElem{T}) where {T <: RingElem}
    return z
 end
 
+function *(a::T, b::LaurentSeriesFieldElem{T}) where {T <: RingElem}
+   len = pol_length(b)
+   z = parent(b)()
+   fit!(z, len)
+   set_prec!(z, precision(b))
+   set_val!(z, valuation(b))
+   set_scale!(z, scale(b))
+   for i = 1:len
+      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+   end
+   set_length!(z, normalise(z, len))
+   renormalize!(z)
+   z = rescale!(z)
+   return z
+end
+
+#doc"""
+#    *{T <: RingElem}(a::T, b::LaurentSeriesElem{T})
+#> Return $a\times b$.
+#"""
+#function *(a::T, b::LaurentSeriesElem{T}) where {T <: RingElem}
+#   len = pol_length(b)
+#   z = parent(b)()
+#   fit!(z, len)
+#   set_prec!(z, precision(b))
+#   set_val!(z, valuation(b))
+#   set_scale!(z, scale(b))
+#   for i = 1:len
+#      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+#   end
+#   set_length!(z, normalise(z, len))
+#   renormalize!(z)
+#   z = rescale!(z)
+#   return z
+#end
+
+#function *(a::T, b::LaurentSeriesElem{T}) where {T <: Integer}
+#   len = pol_length(b)
+#   z = parent(b)()
+#   fit!(z, len)
+#   set_prec!(z, precision(b))
+#   set_val!(z, valuation(b))
+#   set_scale!(z, scale(b))
+#   for i = 1:len
+#      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+#   end
+#   set_length!(z, normalise(z, len))
+#   renormalize!(z)
+#   z = rescale!(z)
+#   return z
+#end
+#
+#function *(a::T, b::LaurentSeriesElem{T}) where {T <: Rational}
+#   len = pol_length(b)
+#   z = parent(b)()
+#   fit!(z, len)
+#   set_prec!(z, precision(b))
+#   set_val!(z, valuation(b))
+#   set_scale!(z, scale(b))
+#   for i = 1:len
+#      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+#   end
+#   set_length!(z, normalise(z, len))
+#   renormalize!(z)
+#   z = rescale!(z)
+#   return z
+#end
+#
+#function *(a::T, b::LaurentSeriesElem{T}) where {T <: AbstractFloat}
+#   len = pol_length(b)
+#   z = parent(b)()
+#   fit!(z, len)
+#   set_prec!(z, precision(b))
+#   set_val!(z, valuation(b))
+#   set_scale!(z, scale(b))
+#   for i = 1:len
+#      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+#   end
+#   set_length!(z, normalise(z, len))
+#   renormalize!(z)
+#   z = rescale!(z)
+#   return z
+#end
+
 doc"""
     *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesElem)
 > Return $a\times b$.
 """
-function *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesElem)
+function *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesRingElem{T}) where {T}
+   len = pol_length(b)
+   z = parent(b)()
+   fit!(z, len)
+   set_prec!(z, precision(b))
+   set_val!(z, valuation(b))
+   set_scale!(z, scale(b))
+   for i = 1:len
+      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+   end
+   set_length!(z, normalise(z, len))
+   renormalize!(z)
+   z = rescale!(z)
+   return z
+end
+
+function *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesFieldElem{T}) where {T}
    len = pol_length(b)
    z = parent(b)()
    fit!(z, len)
@@ -728,13 +828,29 @@ doc"""
     *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
 > Return $a\times b$.
 """
-*(a::LaurentSeriesElem{T}, b::T) where {T <: RingElem} = b*a
+*(a::LaurentSeriesRingElem{T}, b::T) where {T <: RingElement} = b*a
 
 doc"""
-    *(a::LaurentSeriesElem, b::Union{Integer, Rational, AbstractFloat})
+    *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
 > Return $a\times b$.
 """
-*(a::LaurentSeriesElem, b::Union{Integer, Rational, AbstractFloat}) = b*a
+*(a::LaurentSeriesFieldElem{T}, b::T) where {T <: RingElement} = b*a
+
+#doc"""
+#    *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
+#> Return $a\times b$.
+#"""
+#*(a::LaurentSeriesElem{T}, b::T) where {T <: RingElement} = b*a
+#
+#doc"""
+#    *(a::LaurentSeriesElem, b::Union{Integer, Rational, AbstractFloat})
+#> Return $a\times b$.
+#"""
+#*(a::LaurentSeriesElem, b::Integer) = b*a
+#
+#*(a::LaurentSeriesElem, b::Rational) = b*a
+#
+#*(a::LaurentSeriesElem, b::AbstractFloat) = b*a
 
 ###############################################################################
 #

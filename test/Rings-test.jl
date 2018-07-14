@@ -10,7 +10,7 @@ include("generic/PuiseuxSeries-test.jl")
 include("generic/Matrix-test.jl")
 include("generic/MPoly-test.jl")
 
-function test_rings()
+#function test_rings()
    test_Integers()
 
    test_gen_poly()
@@ -22,4 +22,4 @@ function test_rings()
    test_gen_puiseux_series()
    test_gen_mat()
    test_gen_mpoly()
-end
+#end
