@@ -555,7 +555,7 @@ end
 #
 ###############################################################################
 
-function *(a::SparsePoly, n::Union{Integer, Rational, AbstractFloat})
+function *(a::SparsePoly, n)
    r = parent(a)()
    fit!(r, length(a))
    j = 1
@@ -571,43 +571,43 @@ function *(a::SparsePoly, n::Union{Integer, Rational, AbstractFloat})
    return r
 end
 
-function *(a::SparsePoly{T}, n::T) where {T <: RingElem}
-   r = parent(a)()
-   fit!(r, length(a))
-   j = 1
-   for i = 1:length(a)
-      c = a.coeffs[i]*n
-      if c != 0
-         r.coeffs[j] = c
-         r.exps[j] = a.exps[i]
-         j += 1
-      end
-   end
-   r.length = j - 1
-   return r
-end
-
-function *(a::SparsePoly{T}, n::T) where {T <: RingElement}
-   r = parent(a)()
-   fit!(r, length(a))
-   j = 1
-   for i = 1:length(a)
-      c = a.coeffs[i]*n
-      if c != 0
-         r.coeffs[j] = c
-         r.exps[j] = a.exps[i]
-         j += 1
-      end
-   end
-   r.length = j - 1
-   return r
-end
-
-*(n::T, a::SparsePoly{T}) where {T <: RingElem} = a*n
-
-*(n::T, a::SparsePoly{T}) where {T <: RingElement} = a*n
-
-*(n::Union{Integer, Rational, AbstractFloat}, a::SparsePoly) = a*n
+#function *(a::SparsePoly{T}, n::T) where {T <: RingElem}
+#   r = parent(a)()
+#   fit!(r, length(a))
+#   j = 1
+#   for i = 1:length(a)
+#      c = a.coeffs[i]*n
+#      if c != 0
+#         r.coeffs[j] = c
+#         r.exps[j] = a.exps[i]
+#         j += 1
+#      end
+#   end
+#   r.length = j - 1
+#   return r
+#end
+#
+#function *(a::SparsePoly{T}, n::T) where {T <: RingElement}
+#   r = parent(a)()
+#   fit!(r, length(a))
+#   j = 1
+#   for i = 1:length(a)
+#      c = a.coeffs[i]*n
+#      if c != 0
+#         r.coeffs[j] = c
+#         r.exps[j] = a.exps[i]
+#         j += 1
+#      end
+#   end
+#   r.length = j - 1
+#   return r
+#end
+#
+#*(n::T, a::SparsePoly{T}) where {T <: RingElem} = a*n
+#
+#*(n::T, a::SparsePoly{T}) where {T <: RingElement} = a*n
+#
+#*(n::Union{Integer, Rational, AbstractFloat}, a::SparsePoly) = a*n
 
 ###############################################################################
 #

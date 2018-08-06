@@ -4,6 +4,8 @@
 #
 ###############################################################################
 
+using Markdown
+
 export max_degrees, gens, divides,
        isconstant, isdegree, ismonomial, isreverse, isterm, main_variable,
        main_variable_extract, main_variable_insert, nvars, ordering,
@@ -538,7 +540,7 @@ function show(io::IO, x::MPoly)
 end
 
 function show(io::IO, p::MPolyRing)
-   const max_vars = 5 # largest number of variables to print
+   max_vars = 5 # largest number of variables to print
    n = p.num_vars
    print(io, "Multivariate Polynomial Ring in ")
    if n > max_vars

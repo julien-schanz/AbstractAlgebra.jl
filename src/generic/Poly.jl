@@ -4,6 +4,8 @@
 #
 ###############################################################################
 
+using Markdown
+
 export PolynomialRing, hash, coeff, isgen, lead,
        var, truncate, mullow, reverse, shift_left, shift_right, divexact,
        pseudorem, pseudodivrem, gcd, degree, content, primpart, evaluate,
@@ -1815,7 +1817,7 @@ function resultant_subresultant(p::AbstractAlgebra.PolyElem{T}, q::AbstractAlgeb
 end
 
 function resultant_lehmer(a::AbstractAlgebra.PolyElem{T}, b::AbstractAlgebra.PolyElem{T}) where {T <: Union{AbstractAlgebra.ResElem, FieldElement}}
-   const crossover = 40
+   crossover = 40
    R = base_ring(a)
    check_parent(a, b)
    if length(a) == 0 || length(b) == 0

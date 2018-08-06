@@ -2,6 +2,10 @@ VERSION >= v"0.4.0-dev+6521" && __precompile__()
 
 module AbstractAlgebra
 
+using Markdown
+
+import Markdown: @doc_str
+
 import Base: Array, abs, acos, acosh, asin, asinh, atan, atan2, atanh, base,
              bin, ceil, checkbounds, conj, convert, cmp, contains, cos, cosh,
              cospi, cot, coth, dec, deepcopy, deepcopy_internal, deserialize,

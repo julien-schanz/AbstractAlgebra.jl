@@ -4293,9 +4293,7 @@ function identity_matrix(R::Ring, n::Int)
    for i in 1:n
       arr[i, i] = one(R)
    end
-   z = Mat{elem_type(R)}(arr)
-   z.base_ring = R
-   return z
+   return arr
 end
 
 ###############################################################################

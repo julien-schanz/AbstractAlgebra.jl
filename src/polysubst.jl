@@ -1,4 +1,6 @@
-for T in subtypes(PolyElem)
+using InteractiveUtils
+
+for T in InteractiveUtils.subtypes(PolyElem)
   (f::T)(a) = subst(f, a)
 
   function (f::T)(a::T)

@@ -499,7 +499,15 @@ doc"""
     +{T <: RingElement}(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T})
 > Return $a + b$.
 """
-function +(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T}) where {T <: RingElement}
+function +(a::LaurentSeriesRingElem{T}, b::LaurentSeriesRingElem{T}) where {T <: RingElement}
+  return _add_laurent(a, b)
+end
+
+function +(a::LaurentSeriesFieldElem{T}, b::LaurentSeriesFieldElem{T}) where {T <: RingElement}
+  return _add_laurent(a, b)
+end
+
+function _add_laurent(a, b)
    check_parent(a, b)
    lena = pol_length(a)
    lenb = pol_length(b)
@@ -560,6 +568,14 @@ doc"""
 > Return $a - b$.
 """
 function -(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T}) where {T <: RingElement}
+   return _sub_laurent(a, b)
+end
+
+function -(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T}) where {T <: RingElement}
+   return _sub_laurent(a, b)
+end
+
+function _sub_laurent(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T}) where {T <: RingElement}
    check_parent(a, b)
    lena = pol_length(a)
    lenb = pol_length(b)
@@ -619,7 +635,15 @@ doc"""
     *{T <: RingElement}(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T})
 > Return $a\times b$.
 """
-function *(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T}) where {T <: RingElement}
+function *(a::LaurentSeriesRingElem{T}, b::LaurentSeriesRingElem{T}) where {T <: RingElement}
+  return _mul_laurent(a, b)
+end
+
+function *(a::LaurentSeriesFieldElem{T}, b::LaurentSeriesFieldElem{T}) where {T <: RingElement}
+  return _mul_laurent(a, b)
+end
+
+function _mul_laurent(a::LaurentSeriesElem{T}, b::LaurentSeriesElem{T}) where {T <: RingElement}
    check_parent(a, b)
    lena = pol_length(a)
    lenb = pol_length(b)
@@ -688,7 +712,7 @@ doc"""
     *{T <: RingElem}(a::T, b::LaurentSeriesElem{T})
 > Return $a\times b$.
 """
-function *(a::T, b::LaurentSeriesRingElem{T}) where {T <: RingElem}
+function *(a::RingElem, b::LaurentSeriesRingElem)
    len = pol_length(b)
    z = parent(b)()
    fit!(z, len)
@@ -704,7 +728,7 @@ function *(a::T, b::LaurentSeriesRingElem{T}) where {T <: RingElem}
    return z
 end
 
-function *(a::T, b::LaurentSeriesFieldElem{T}) where {T <: RingElem}
+function *(a::Int, b::LaurentSeriesRingElem)
    len = pol_length(b)
    z = parent(b)()
    fit!(z, len)
@@ -719,6 +743,22 @@ function *(a::T, b::LaurentSeriesFieldElem{T}) where {T <: RingElem}
    z = rescale!(z)
    return z
 end
+
+#function *(a::T, b::LaurentSeriesFieldElem{T}) where {T <: RingElem}
+#   len = pol_length(b)
+#   z = parent(b)()
+#   fit!(z, len)
+#   set_prec!(z, precision(b))
+#   set_val!(z, valuation(b))
+#   set_scale!(z, scale(b))
+#   for i = 1:len
+#      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+#   end
+#   set_length!(z, normalise(z, len))
+#   renormalize!(z)
+#   z = rescale!(z)
+#   return z
+#end
 
 #doc"""
 #    *{T <: RingElem}(a::T, b::LaurentSeriesElem{T})
@@ -787,55 +827,55 @@ end
 #   z = rescale!(z)
 #   return z
 #end
-
-doc"""
-    *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesElem)
-> Return $a\times b$.
-"""
-function *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesRingElem{T}) where {T}
-   len = pol_length(b)
-   z = parent(b)()
-   fit!(z, len)
-   set_prec!(z, precision(b))
-   set_val!(z, valuation(b))
-   set_scale!(z, scale(b))
-   for i = 1:len
-      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
-   end
-   set_length!(z, normalise(z, len))
-   renormalize!(z)
-   z = rescale!(z)
-   return z
-end
-
-function *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesFieldElem{T}) where {T}
-   len = pol_length(b)
-   z = parent(b)()
-   fit!(z, len)
-   set_prec!(z, precision(b))
-   set_val!(z, valuation(b))
-   set_scale!(z, scale(b))
-   for i = 1:len
-      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
-   end
-   set_length!(z, normalise(z, len))
-   renormalize!(z)
-   z = rescale!(z)
-   return z
-end
-
-doc"""
-    *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
-> Return $a\times b$.
-"""
-*(a::LaurentSeriesRingElem{T}, b::T) where {T <: RingElement} = b*a
-
-doc"""
-    *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
-> Return $a\times b$.
-"""
-*(a::LaurentSeriesFieldElem{T}, b::T) where {T <: RingElement} = b*a
-
+#
+#doc"""
+#    *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesElem)
+#> Return $a\times b$.
+#"""
+#function *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesRingElem{T}) where {T}
+#   len = pol_length(b)
+#   z = parent(b)()
+#   fit!(z, len)
+#   set_prec!(z, precision(b))
+#   set_val!(z, valuation(b))
+#   set_scale!(z, scale(b))
+#   for i = 1:len
+#      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+#   end
+#   set_length!(z, normalise(z, len))
+#   renormalize!(z)
+#   z = rescale!(z)
+#   return z
+#end
+#
+#function *(a::Union{Integer, Rational, AbstractFloat}, b::LaurentSeriesFieldElem{T}) where {T}
+#   len = pol_length(b)
+#   z = parent(b)()
+#   fit!(z, len)
+#   set_prec!(z, precision(b))
+#   set_val!(z, valuation(b))
+#   set_scale!(z, scale(b))
+#   for i = 1:len
+#      z = setcoeff!(z, i - 1, a*polcoeff(b, i - 1))
+#   end
+#   set_length!(z, normalise(z, len))
+#   renormalize!(z)
+#   z = rescale!(z)
+#   return z
+#end
+#
+#doc"""
+#    *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
+#> Return $a\times b$.
+#"""
+#*(a::LaurentSeriesRingElem{T}, b::T) where {T <: RingElement} = b*a
+#
+#doc"""
+#    *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
+#> Return $a\times b$.
+#"""
+#*(a::LaurentSeriesFieldElem{T}, b::T) where {T <: RingElement} = b*a
+#
 #doc"""
 #    *{T <: RingElem}(a::LaurentSeriesElem{T}, b::T)
 #> Return $a\times b$.
@@ -846,7 +886,7 @@ doc"""
 #    *(a::LaurentSeriesElem, b::Union{Integer, Rational, AbstractFloat})
 #> Return $a\times b$.
 #"""
-#*(a::LaurentSeriesElem, b::Integer) = b*a
+*(a::LaurentSeriesRingElem, b::Integer) = b*a
 #
 #*(a::LaurentSeriesElem, b::Rational) = b*a
 #
