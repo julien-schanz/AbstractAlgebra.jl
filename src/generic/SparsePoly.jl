@@ -555,7 +555,7 @@ end
 #
 ###############################################################################
 
-function *(a::SparsePoly, n)
+function _mul_scalar_spoly(a, n)
    r = parent(a)()
    fit!(r, length(a))
    j = 1
@@ -571,43 +571,48 @@ function *(a::SparsePoly, n)
    return r
 end
 
-#function *(a::SparsePoly{T}, n::T) where {T <: RingElem}
-#   r = parent(a)()
-#   fit!(r, length(a))
-#   j = 1
-#   for i = 1:length(a)
-#      c = a.coeffs[i]*n
-#      if c != 0
-#         r.coeffs[j] = c
-#         r.exps[j] = a.exps[i]
-#         j += 1
-#      end
-#   end
-#   r.length = j - 1
-#   return r
-#end
-#
-#function *(a::SparsePoly{T}, n::T) where {T <: RingElement}
-#   r = parent(a)()
-#   fit!(r, length(a))
-#   j = 1
-#   for i = 1:length(a)
-#      c = a.coeffs[i]*n
-#      if c != 0
-#         r.coeffs[j] = c
-#         r.exps[j] = a.exps[i]
-#         j += 1
-#      end
-#   end
-#   r.length = j - 1
-#   return r
-#end
-#
-#*(n::T, a::SparsePoly{T}) where {T <: RingElem} = a*n
-#
-#*(n::T, a::SparsePoly{T}) where {T <: RingElement} = a*n
-#
-#*(n::Union{Integer, Rational, AbstractFloat}, a::SparsePoly) = a*n
+function *(a::SparsePoly{T}, n::T) where {T <: RingElem}
+  return _mul_scalar_spoly(a, n)
+end
+
+function *(a::SparsePoly{T}, n::T) where {T <: Integer}
+  return _mul_scalar_spoly(a, n)
+end
+
+function *(a::SparsePoly{T}, n::T) where {T <: Rational}
+   return _mul_scalar_spoly(a, n)
+end
+
+function *(a::SparsePoly{T}, n::T) where {T <: AbstractFloat}
+   return _mul_scalar_spoly(a, n)
+end
+
+function *(a::SparsePoly{T}, n::Integer) where {T <: RingElement}
+   return _mul_scalar_spoly(a, n)
+end
+
+function *(a::SparsePoly{T}, n::Rational) where {T <: RingElement}
+   return _mul_scalar_spoly(a, n)
+end
+
+function *(a::SparsePoly{T}, n::AbstractFloat) where {T <: RingElement}
+   return _mul_scalar_spoly(a, n)
+end
+
+
+*(n::T, a::SparsePoly{T}) where {T <: RingElem} = _mul_scalar_spoly(a, n)
+
+*(n::T, a::SparsePoly{T}) where {T <: Integer} = _mul_scalar_spoly(a, n)
+
+*(n::T, a::SparsePoly{T}) where {T <: Rational} = _mul_scalar_spoly(a, n)
+
+*(n::T, a::SparsePoly{T}) where {T <: AbstractFloat} = _mul_scalar_spoly(a, n)
+
+*(n::Integer, a::SparsePoly{T}) where {T <: RingElement} = _mul_scalar_spoly(a, n)
+
+*(n::Rational, a::SparsePoly{T}) where {T <: RingElement} = _mul_scalar_spoly(a, n)
+
+*(n::AbstractFloat, a::SparsePoly{T}) where {T <: RingElement} = _mul_scalar_spoly(a, n)
 
 ###############################################################################
 #

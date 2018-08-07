@@ -382,7 +382,77 @@ function -(a::PuiseuxSeriesElem{T}, b::PuiseuxSeriesElem{T}) where T <: RingElem
     return z
 end
 
-function *(a::PuiseuxSeriesElem{T}, b::PuiseuxSeriesElem{T}) where T <: RingElement
+function *(a::PuiseuxSeriesFieldElem{T}, b::PuiseuxSeriesFieldElem{T}) where T <: RingElem
+    s = gcd(a.scale, b.scale)
+    zscale = div(a.scale*b.scale, s)
+    ainf = div(a.scale, s)
+    binf = div(b.scale, s)
+    z = parent(a)(inflate(a.data, binf)*inflate(b.data, ainf), zscale)
+    z = rescale!(z)
+    return z
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::PuiseuxSeriesRingElem{T}) where T <: RingElem
+    s = gcd(a.scale, b.scale)
+    zscale = div(a.scale*b.scale, s)
+    ainf = div(a.scale, s)
+    binf = div(b.scale, s)
+    z = parent(a)(inflate(a.data, binf)*inflate(b.data, ainf), zscale)
+    z = rescale!(z)
+    return z
+end
+
+function *(a::PuiseuxSeriesFieldElem{T}, b::PuiseuxSeriesFieldElem{T}) where T <: Rational
+    s = gcd(a.scale, b.scale)
+    zscale = div(a.scale*b.scale, s)
+    ainf = div(a.scale, s)
+    binf = div(b.scale, s)
+    z = parent(a)(inflate(a.data, binf)*inflate(b.data, ainf), zscale)
+    z = rescale!(z)
+    return z
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::PuiseuxSeriesRingElem{T}) where T <: Rational
+    s = gcd(a.scale, b.scale)
+    zscale = div(a.scale*b.scale, s)
+    ainf = div(a.scale, s)
+    binf = div(b.scale, s)
+    z = parent(a)(inflate(a.data, binf)*inflate(b.data, ainf), zscale)
+    z = rescale!(z)
+    return z
+end
+
+function *(a::PuiseuxSeriesFieldElem{T}, b::PuiseuxSeriesFieldElem{T}) where T <: AbstractFloat
+    s = gcd(a.scale, b.scale)
+    zscale = div(a.scale*b.scale, s)
+    ainf = div(a.scale, s)
+    binf = div(b.scale, s)
+    z = parent(a)(inflate(a.data, binf)*inflate(b.data, ainf), zscale)
+    z = rescale!(z)
+    return z
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::PuiseuxSeriesRingElem{T}) where T <: AbstractFloat
+    s = gcd(a.scale, b.scale)
+    zscale = div(a.scale*b.scale, s)
+    ainf = div(a.scale, s)
+    binf = div(b.scale, s)
+    z = parent(a)(inflate(a.data, binf)*inflate(b.data, ainf), zscale)
+    z = rescale!(z)
+    return z
+end
+
+function *(a::PuiseuxSeriesFieldElem{T}, b::PuiseuxSeriesFieldElem{T}) where T <: Integer
+    s = gcd(a.scale, b.scale)
+    zscale = div(a.scale*b.scale, s)
+    ainf = div(a.scale, s)
+    binf = div(b.scale, s)
+    z = parent(a)(inflate(a.data, binf)*inflate(b.data, ainf), zscale)
+    z = rescale!(z)
+    return z
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::PuiseuxSeriesRingElem{T}) where T <: Integer
     s = gcd(a.scale, b.scale)
     zscale = div(a.scale*b.scale, s)
     ainf = div(a.scale, s)
@@ -398,21 +468,53 @@ end
 #
 ###############################################################################
 
-function *(a::PuiseuxSeriesElem{T}, b::T) where T <: RingElem
+function _mul_scalar_puiseux(a, b)
    z = parent(a)(a.data*b, a.scale)
    z = rescale!(z)
    return z
 end
 
-function *(a::PuiseuxSeriesElem, b::Union{Integer, Rational, AbstractFloat})
-   z = parent(a)(a.data*b, a.scale)
-   z = rescale!(z)
-   return z
+function *(a::PuiseuxSeriesRingElem{T}, b::T) where T <: RingElem
+   return _mul_scalar_puiseux(a, b)
 end
 
-*(a::T, b::PuiseuxSeriesElem{T}) where T <: RingElem = b*a
+function *(a::PuiseuxSeriesRingElem{T}, b::T) where T <: AbstractFloat
+   return _mul_scalar_puiseux(a, b)
+end
 
-*(a::Union{Integer, Rational, AbstractFloat}, b::PuiseuxSeriesElem) = b*a
+function *(a::PuiseuxSeriesRingElem{T}, b::T) where T <: Integer
+   return _mul_scalar_puiseux(a, b)
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::T) where T <: Rational
+   return _mul_scalar_puiseux(a, b)
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::Integer) where {T <: RingElement}
+   return _mul_scalar_puiseux(a, b)
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::Rational) where {T <: RingElement}
+   return _mul_scalar_puiseux(a, b)
+end
+
+function *(a::PuiseuxSeriesRingElem{T}, b::AbstractFloat) where {T <: RingElement}
+   return _mul_scalar_puiseux(a, b)
+end
+
+*(a::T, b::PuiseuxSeriesRingElem{T}) where T <: RingElem = _mul_scalar_puiseux(b, a)
+
+*(a::T, b::PuiseuxSeriesRingElem{T}) where T <: Integer = _mul_scalar_puiseux(b, a)
+
+*(a::T, b::PuiseuxSeriesRingElem{T}) where T <: Rational = _mul_scalar_puiseux(b, a)
+
+*(a::T, b::PuiseuxSeriesRingElem{T}) where T <: AbstractFloat = _mul_scalar_puiseux(b, a)
+
+*(a::Integer, b::PuiseuxSeriesRingElem{T}) where T <: RingElement = _mul_scalar_puiseux(b, a)
+
+*(a::Rational, b::PuiseuxSeriesRingElem{T}) where T <: RingElement = _mul_scalar_puiseux(b, a)
+
+*(a::AbstractFloat, b::PuiseuxSeriesRingElem{T}) where T <: RingElement = _mul_scalar_puiseux(b, a)
 
 ###############################################################################
 #

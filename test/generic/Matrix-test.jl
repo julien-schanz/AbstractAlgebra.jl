@@ -1516,7 +1516,7 @@ function test_gen_mat_weak_popov()
    println("PASS")
 end
 
-#function test_gen_mat()
+function test_gen_mat()
    test_gen_mat_constructors()
    test_gen_mat_size()
    test_gen_mat_manipulation()
@@ -1558,4 +1558,4 @@ end
    test_gen_mat_weak_popov()
 
    println("")
-#end
+end

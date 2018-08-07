@@ -249,8 +249,8 @@ function sub(M::AbstractAlgebra.MatElem, rows::UnitRange{Int}, cols::UnitRange{I
   Generic._checkbounds(M, rows.start, cols.start)
   Generic._checkbounds(M, rows.stop, cols.stop)
   z = similar(M, length(rows), length(cols))
-  startr = start(rows)
-  startc = start(cols)
+  startr = first(rows)
+  startc = first(cols)
   for i in rows
     for j in cols
       z[i - startr + 1, j - startc + 1] = deepcopy(M[i, j])
