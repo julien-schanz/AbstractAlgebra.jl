@@ -480,21 +480,6 @@ mutable struct ResRing{T <: RingElement} <: AbstractAlgebra.ResRing{T}
    base_ring::Ring
    modulus::T
 
-   function ResRing{T}(modulus::T, cached::Bool = true) where T <: RingElement
-      c = canonical_unit(modulus)
-      if !isone(c)
-        modulus = divexact(modulus, c)
-      end
-      if cached && haskey(ModulusDict, (parent(modulus), modulus))
-         return ModulusDict[parent(modulus), modulus]::ResRing{T}
-      else
-         z = new{T}(parent(modulus), modulus)
-         if cached
-            ModulusDict[parent(modulus), modulus] = z
-         end
-         return z
-      end
-   end
 end
 
 const ModulusDict = Dict{Tuple{Ring, RingElement}, Ring}()
