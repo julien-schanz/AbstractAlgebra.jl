@@ -812,19 +812,6 @@ mutable struct Mat{T <: RingElement} <: AbstractAlgebra.MatElem{T}
    entries::Array{T, 2}
    base_ring::Ring
 
-   function Mat{T}(A::Array{T, 2}) where T <: RingElement
-      return new{T}(A)
-   end
-
-   function Mat{T}(r::Int, c::Int, A::Array{T, 1}) where T <: RingElement
-      t = Array{T}(undef, r, c)
-      for i = 1:r
-         for j = 1:c
-            t[i, j] = A[(i - 1) * c + j]
-         end
-      end
-      return new{T}(t)
-   end
 end
 
 ###############################################################################
