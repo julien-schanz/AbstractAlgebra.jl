@@ -2398,7 +2398,7 @@ function charpoly_danilevsky_ff!(S::Ring, A::MatrixElem{T}) where {T <: RingElem
          A[n - i, kk] = mul!(A[n - i, kk], A[n - i, kk], d)
       end
       d = inv(h)
-      parent(d) # To work around a bug in julia
+      #parent(d) # To work around a bug in julia
       i += 1
    end
    b = S()
@@ -4218,76 +4218,6 @@ end
 #   Parent object call overload
 #
 ###############################################################################
-
-function (a::MatSpace{T})() where {T <: RingElement}
-   R = base_ring(a)
-   entries = Array{T}(undef, a.rows, a.cols)
-   for i = 1:a.rows
-      for j = 1:a.cols
-         entries[i, j] = zero(R)
-      end
-   end
-   z = Mat{T}(entries)
-   z.base_ring = R
-   return z
-end
-
-function (a::MatSpace{T})(b::S) where {S <: RingElement, T <: RingElement}
-   R = base_ring(a)
-   entries = Array{T}(undef, a.rows, a.cols)
-   rb = R(b)
-   for i = 1:a.rows
-      for j = 1:a.cols
-         if i != j
-            entries[i, j] = zero(R)
-         else
-            entries[i, j] = rb
-         end
-      end
-   end
-   z = Mat{T}(entries)
-   z.base_ring = R
-   return z
-end
-
-function (a::MatSpace{T})(b::Mat{T}) where {T <: RingElement}
-   parent(b) != a && error("Unable to coerce matrix")
-   return b
-end
-
-function (a::MatSpace{T})(b::AbstractArray{T, 2}) where T <: RingElement
-   R = base_ring(a)
-   _check_dim(a.rows, a.cols, b)
-   for i = 1:a.rows
-      for j = 1:a.cols
-         b[i, j] = R(b[i, j])
-      end
-   end
-   z = Mat{T}(b)
-   z.base_ring = R
-   return z
-end
-
-function (a::MatSpace{T})(b::AbstractArray{S, 2}) where {S <: RingElement, T <: RingElement}
-   R = base_ring(a)
-   _check_dim(a.rows, a.cols, b)
-   entries = Array{T}(undef, a.rows, a.cols)
-   for i = 1:a.rows
-      for j = 1:a.cols
-         entries[i, j] = R(b[i, j])
-      end
-   end
-   z = Mat{T}(entries)
-   z.base_ring = R
-   return z
-end
-
-function (a::MatSpace{T})(b::AbstractArray{S, 1}) where {S <: RingElement, T <: RingElement}
-   _check_dim(a.rows, a.cols, b)
-   b = Array{S, 2}(transpose(reshape(b, a.cols, a.rows)))
-   z = a(b)
-   return z
-end
 
 ################################################################################
 #

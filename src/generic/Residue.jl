@@ -509,34 +509,6 @@ end
 #
 ###############################################################################
 
-function (a::ResRing{T})(b::RingElement) where {T <: RingElement}
-   return a(base_ring(a)(b))
-end
-
-function (a::ResRing{T})() where {T <: RingElement}
-   z = Res{T}(zero(base_ring(a)))
-   z.parent = a
-   return z
-end
-
-function (a::ResRing{T})(b::Integer) where {T <: RingElement}
-   z = Res{T}(mod(base_ring(a)(b), modulus(a)))
-   z.parent = a
-   return z
-end
-
-function (a::ResRing{T})(b::T) where {T <: RingElem}
-   base_ring(a) != parent(b) && error("Operation on incompatible objects")
-   z = Res{T}(mod(b, modulus(a)))
-   z.parent = a
-   return z
-end
-
-function (a::ResRing{T})(b::AbstractAlgebra.ResElem{T}) where {T <: RingElement}
-   a != parent(b) && error("Operation on incompatible objects")
-   return b
-end
-
 ###############################################################################
 #
 #   ResidueRing constructor
