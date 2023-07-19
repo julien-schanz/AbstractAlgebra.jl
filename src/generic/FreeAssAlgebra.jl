@@ -264,7 +264,7 @@ end
 
 ###############################################################################
 #
-# Unsafe functions
+# Unsafe functions TODO why are these needed? can I remove them?
 #
 ###############################################################################
 
@@ -313,6 +313,12 @@ end
 #   Comparison
 #
 ###############################################################################
+
+Base.hash(a::FreeAssAlgMonomial, h::UInt) = hash(a.exponents, h)
+
+function ==(a::FreeAssAlgMonomial, b::FreeAssAlgMonomial)
+    return a.exponents == b.exponents
+end
 
 function ==(a::FreeAssAlgElem{T}, b::FreeAssAlgElem{T}) where T
     fl = check_parent(a, b, false)
@@ -372,6 +378,9 @@ function combine_like_terms!(z::FreeAssAlgElem{T}) where T
     return z
 end
 
+function isless(a::FreeAssAlgMonomial, b::FreeAssAlgMonomial)
+    return word_cmp(a.exponents, b.exponents) < 0
+end
 
 @doc """
     isless(p::FreeAssAlgElem{T}, q::FreeAssAlgElem{T}) where T
@@ -408,7 +417,7 @@ function isless(p::FreeAssAlgElem{T}, q::FreeAssAlgElem{T}) where T
     if p == q
         return false
     end
-    l = min(length(p.exps), length(q.exps))
+    l = min(p.length, q.length)
     sort_terms!(p)
     sort_terms!(q)
     for i in 1:l

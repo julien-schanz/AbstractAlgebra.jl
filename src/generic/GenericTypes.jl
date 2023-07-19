@@ -4,6 +4,8 @@
 #
 ###############################################################################
 
+import DataStructures: BinaryMaxHeap
+
 ###############################################################################
 #
 #   SymmetricGroup
@@ -1135,17 +1137,28 @@ end
 
 const FreeAssAlgID = CacheDictType{Tuple{Ring, Vector{Symbol}}, NCRing}()
 
+mutable struct FreeAssAlgMonomial
+    exponents::Vector{Int}
+end
+
 # *** Note on length:
 # length(.coeffs), and length(.exps) may be greater than the real length .length
-# *** Note on current ownership conventions in .exps:
-# the object of course owns the vector .exps and can mutate its length.
-# However, the object does not necessarily own the entries in the .exps vector
-# and should only mutate them when sole ownership is known.
+# *** 
 mutable struct FreeAssAlgElem{T <: RingElement} <: AbstractAlgebra.FreeAssAlgElem{T}
    parent::FreeAssAlgebra{T}
-   coeffs::Vector{T}
-   exps::Vector{Vector{Int}}  # TODO: Int -> UInt8 for nvars < 256, etc
+   coeffs::Dict{FreeAssAlgMonomial, T}
+   monomials::BinaryMaxHeap{FreeAssAlgMonomial}
    length::Int
+end
+
+function FreeAssAlgElem{T}(parent::FreeAssAlgebra{T}, coeffs::Vector{T}, exps::Vector{Vector{Int}}, length::Int) where T
+    coeff_dict = Dict{FreeAssAlgMonomial, T}
+    monomial_vec = [FreeAssAlgMonomial(e) for e in exps]
+    for i in 1:length(monomial_vec)
+        coeff_dict[monomial_vec[i]] = coeffs[i]
+    end
+    monomials = BinaryMaxHeap(monomial_vec)
+    return FreeAssAlgElem{T}(parent, coeff_dict, monomials, length)
 end
 
 # the iterators for coeffs, terms, etc. are shared with MPoly. Just this remains
